@@ -1,0 +1,60 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+          "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <script src="../ruffle/ruffle.js"></script>
+    <meta charset="utf-8" />
+    <title>EMSelfy Me!</title>
+    <link href="../css/base.css" rel="stylesheet" />
+    <link href="../iconfont/iconfont.css" rel="stylesheet" />
+    <link href="../css/index.css" rel="stylesheet" />
+    <link href="../css/common.css" rel="stylesheet" />
+    <script>
+        utils = require("../js/utils.js");
+        window.baidu = require("../jslib/baiduTemplate.js");
+        window.template = baidu.template;
+    </script>
+
+    <script src="../js/common.js"></script>
+    <script src="../js/index.js"></script>
+</head>
+<body>
+    <div class="win-div">
+        <script type="text/html" id="tp:main">
+            <div class="flash_blcok"></div>
+            <embed src="/flash/selfy.swf?server=<%=encodeURI(window.serverurl+'/')%>&<%=query%>"
+                   class="selfy_flash" menu="false" quality="high" name="avatar" align="middle" width="130" height="190"
+                   allowscriptaccess="always" type="application/x-shockwave-flash" wmode="transparent">
+        </script>
+    </div>
+    <style>
+        .selfy_flash,
+        .flash_blcok { position: absolute; top: 0; right: 0; bottom: 0; left: 0; }
+        .flash_blcok { z-index: 1; }
+    </style>
+</body>
+<script type="text/javascript">
+    var init = function () {
+        var params = require("querystring").parse(window.params);
+        var child_proccess = require("child_process");
+        var path = require("path");
+
+        var main = document.getElementById("tp:main");
+        $(main).wrap(baidu.template("tp:main", {}));
+        var win = $(window), flash = $(".selfy_flash");
+        win.on("resize", function () {
+            flash.width(win.width());
+            flash.height(win.height());
+        });
+        win.trigger("init");
+
+        if (params.action == "shot") {
+            var cmd = path.join(__dirname, "/../../../lib/shot.exe shot ") + window.info.hwnd + " 1.png";
+            child_proccess.exec(cmd);
+        }
+
+
+    }
+
+</script>
+</html>

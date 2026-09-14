@@ -1,0 +1,4 @@
+node_modules/
+*.log
+selfy.asar
+selfy.db

@@ -1,0 +1,59 @@
+﻿
+/*defalt lab*/
+html, body { width: 100%; height: 100%; }
+body { font-family: "Microsoft YaHei"; color: #000; overflow: hidden; }
+img { -webkit-user-select: none; -webkit-touch-callout: none; }
+
+/*begin scrollbar*/
+*::-webkit-scrollbar { width: 12px; }
+
+*::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+
+*::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.5); }
+*::-webkit-scrollbar-thumb:window-inactive { background: rgba(0,0,0,0.2); }
+/*end scrollbar*/
+
+/*begin select*/
+
+select { border: solid 1px #000; -webkit-appearance: none; color: #fff; background: url('../imgs/select-ico.png') no-repeat scroll right center transparent; background-color: rgba(0,0,0,0.5); padding-right: 14px; }
+
+/*end select*/
+
+/*begin window title*/
+
+.win-div { border: 1px solid #63B4FB; position: absolute; top: 0; right: 0; bottom: 0; left: 0; }
+
+.win-title { height: 31px; line-height: 31px; background: #135995; color: #fff; position: relative; z-index: 999999999999; }
+.win-title ul { position: absolute; right: 0; top: 0; }
+
+/*.win-ico { position: absolute; left: 9px; top: 9px; border: 1px #3c3c3c solid; }*/
+
+.win-btn { float: left; width: 45px; height: 31px; line-height: 31px; text-align: center; font-size: 20px; }
+.win-btn:hover { background: #0078D7; }
+.win-btn.close:hover { background: red; }
+
+.win-btn.min:before { content: '-'; }
+.win-btn.max:before { content: '□'; }
+.win-btn.close:before { content: '×'; }
+
+.win-title h1 { font-size: 12px; margin-left: 10px; }
+
+/*end window title*/
+
+/*begin class*/
+.drag { -webkit-app-region: drag; }
+.nodrag { -webkit-app-region: no-drag; }
+
+.hide { display: none; }
+
+.nosel { -webkit-user-select: none; }
+.curdef { cursor: default; }
+.curpoi { cursor: pointer; }
+
+.block { display: block; }
+.inline { display: inline-block; }
+
+.clearfix { overflow: auto; }
+/*end class*/
+
+.glass-box { background: rgba(46,46,46,0.6); border: 1px solid rgba(160,160,160,0.5); /*box-shadow: 0 0 5px #2b2b2b;*/ }

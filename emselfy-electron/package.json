@@ -1,0 +1,19 @@
+{
+  "name": "EMSelfy",
+  "productName": "EmCodes Selfy",
+  "main": "main.js",
+  "version": "1.0.0",
+  "dependencies": {
+    "ejs": "^6.0.1",
+    "js-htmlencode": "^0.3.0",
+    "sqlite3": "^6.0.1",
+    "xml": "^1.0.1",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "electron": "^44.3.0"
+  },
+  "scripts": {
+    "start": "electron --no-sandbox ."
+  }
+}

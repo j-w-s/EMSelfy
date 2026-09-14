@@ -1,0 +1,493 @@
+﻿
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="../ruffle/ruffle.js"></script>
+    <meta charset="utf-8" />
+    <title>EMSelfy! build ver 1.0!</title>
+    <link href="../css/base.css" rel="stylesheet" />
+    <link href="../jslib/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet" />
+    <link href="../jslib/jquery-ui-1.11.4.custom/jquery-ui.theme.css" rel="stylesheet" />
+    <!--<link href="../jslib/jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" rel="stylesheet" />-->
+    <link href="../iconfont/iconfont.css" rel="stylesheet" />
+    <link href="../css/index.css" rel="stylesheet" />
+    <link href="../css/common.css" rel="stylesheet" />
+    <script>
+        utils = require("../js/utils.js");
+        window.baidu = require("../jslib/baiduTemplate.js");
+        window.template = baidu.template;
+    </script>
+
+    <script src="../js/common.js"></script>
+    <script src="../js/index.js"></script>
+</head>
+<body class="nosel curdef">
+
+    <div class="win-div">
+        <header class="win-title drag curdef">
+            <ul class="nodrag nosel">
+                <li id="win_btn_min" class="win-btn min"></li>
+                <li id="win_btn_max" class="win-btn max"></li>
+                <li id="win_btn_close" class="win-btn close"></li>
+            </ul>
+            <h1>EMSelfy! build ver 1.0(正式版)</h1>
+        </header>
+        <div class="load-block curdef">
+            <span>
+                EmSelfy
+            </span>
+        </div>
+        <script type="text/html" id="tp:main">
+            <div class="win-main">
+                <div class="l-bar min">
+                    <img src="../imgs/background.png" class="l-b-img" />
+                    <ul class="top curdef">
+                        <li class="l-b-btn e_l_menu">
+                            <i class="iconfont icon-menu"></i>
+                        </li>
+                        <li data-panel="seach" class="panel_toggle_btn l-b-btn">
+                            <i class="iconfont icon-yifu"></i>
+                            <span>穿衣</span>
+                        </li>
+                        <li data-panel="favorites" class="panel_toggle_btn l-b-btn">
+                            <i class="iconfont icon-Collection"></i>
+                            <span>收藏</span>
+                        </li>
+                        <li data-panel="history" class="panel_toggle_btn l-b-btn">
+                            <i class="iconfont icon-lishi"></i>
+                            <span>历史</span>
+                        </li>
+                        <li data-panel="file" class="panel_toggle_btn l-b-btn">
+                            <i class="iconfont icon-dakai"></i>
+                            <span>导入/导出/分享</span>
+                        </li>
+                    </ul>
+                    <ul class="bottom">
+                        <li>
+                            <div data-panel="emselfy_feedback" class="panel_toggle_btn l-b-btn">
+                                <i class="iconfont icon-xiaolian"></i>
+                            </div>
+                        </li>
+                        <li>
+                            <div data-panel="emselfy_config" class="panel_toggle_btn l-b-btn">
+                                <i class="iconfont icon-config"></i>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="l-selfy">
+                    <div class="l-selfy-panel">
+                        <%
+                        var l_item=[
+                        {c:"ffg",t:"前景1"}
+                        ,{c:"hat",t:"帽子"}
+                        ,{c:"accef",t:"脸饰"}
+                        ,{c:"coat",t:"外套"}
+                        ,{c:"back",t:"后背"}
+                        ,{c:"shoe",t:"鞋子"}
+                        ,{c:"accen",t:"饰品1"}
+                        ];
+                        var r_item=[
+                        {c:"fg",t:"前景2"}
+                        ,{c:"hair",t:"头发"}
+                        ,{c:"face",t:"脸部"}
+                        ,{c:"top",t:"上衣"}
+                        ,{c:"bottom",t:"下装"}
+                        ,{c:"bg",t:"背景"}
+                        ,{c:"acceh",t:"饰品2"}
+                        ];
+
+                        %>
+                        <ul class="l-selfy-ul">
+                            <%for(var i in l_item){%>
+                            <%var item=l_item[i];%>
+                            <li class="<%=item.c%> selfy-li" data-category="<%=item.c%>">
+                                <img draggable="false" src="" />
+                                <div class="control">
+                                    <span class="title"><%=item.t%></span>
+                                    <div class="btns">
+                                        <i class="seach btn-style iconfont icon-info"></i>
+                                        <i class="del btn-style iconfont icon-delete"></i>
+                                    </div>
+                                </div>
+                            </li>
+                            <%}%>
+                        </ul>
+                        <div class="motion selfy-li" data-category="motion">
+                            <img draggable="false" src="" />
+                            <div class="control">
+                                <span class="title">动作</span>
+                                <div class="btns">
+                                    <i class="seach btn-style iconfont icon-info"></i>
+                                    <i class="del btn-style iconfont icon-delete"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="r-selfy-ul">
+                            <%for(var i in r_item){%>
+                            <%var item=r_item[i];%>
+                            <li class="<%=item.c%> selfy-li" data-category="<%=item.c%>">
+                                <div class="control">
+                                    <span class="title"><%=item.t%></span>
+                                    <div class="btns">
+                                        <i class="seach btn-style iconfont icon-info"></i>
+                                        <i class="del btn-style iconfont icon-delete"></i>
+                                    </div>
+                                </div>
+                                <img draggable="false" src="" />
+                            </li>
+                            <%}%>
+                        </ul>
+                    </div>
+                    <div class="e-selfy-flash">
+
+                    </div>
+
+                </div>
+                <div class="r-panel">
+                    <div class="seach favorites history panel_toggle_p selfy_items">
+                        <div class="s-seach">
+                            <div class="s-b-key">
+                                <form class="e_seach_form">
+                                    <label>
+                                        <div class="s-input">
+                                            <input class="e_seach_input" name="key" placeholder="搜索">
+                                        </div>
+                                        <div class="s-ico btn-style">
+                                            <i class="iconfont icon-xiala"></i>
+                                        </div>
+                                    </label>
+                                </form>
+                                <div class="e_seach_more">
+                                    <div class="s-b-more" style="display:none;">
+                                        <div>
+                                            <label>
+                                                <span class="name">类型</span>
+                                                <span class="value">
+                                                    <select name="cat" class="e_category">
+                                                        <% var categorys={
+                                                        "":"全部",
+                                                        "motion":"动作","face":"脸部","hair":"头发","top":"上衣","bottom":"下装",
+                                                        "shoe":"鞋子","coat":"外套","back":"背部","hat":"帽子","accef":"脸饰",
+                                                        "accen":"饰品1","acceh":"饰品2","ffg":"前景1","fg":"前景2","bg":"背景"
+                                                        };%>
+                                                        <%for(var key in categorys){%>
+                                                        <option value="<%=key%>"><%=categorys[key]%></option>
+                                                        <%}%>
+                                                    </select>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label>
+                                                <span class="name">样式/颜色</span>
+                                                <span class="value">
+                                                    <select name="sty" class="e_color">
+                                                        <option value="">全部</option>
+                                                        <%for(var i in data.styles){%>
+                                                        <%var value = data.styles[i];%>
+                                                        <option value="<%=value%>"><%=value%></option>
+                                                        <%}%>
+                                                    </select>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label>
+                                                <span class="name">服务器</span>
+                                                <span class="value">
+                                                    <select name="ser" class="e_server">
+                                                        <option value="">全部</option>
+                                                        <option value="usa">仅美服</option>
+                                                        <option value="jp">仅日服</option>
+                                                    </select>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label>
+                                                <span class="name">关键字</span>
+                                                <span class="value">
+                                                    <input name="_" class="e_m_key custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left ui-autocomplete-input" style="width: 244px;" />
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label>
+                                                <span class="name">货币</span>
+                                                <span class="value">
+                                                    <select name="coi" class="e_coin">
+                                                        <option value="">全部</option>
+                                                        <option value="CC">CC</option>
+                                                        <option value="GC">GC</option>
+                                                    </select>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label>
+                                                <span class="name">来源</span>
+                                                <span class="value">
+                                                    <select name="sou" class="e_source">
+                                                        <option value="">全部</option>
+                                                        <%for(var i in data.sources){%>
+                                                        <%var value = data.sources[i];%>
+                                                        <option value="<%=value%>"><%=value%></option>
+                                                        <%}%>
+                                                    </select>
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="s-m-btn curdef">
+                                            <div class="reset btn-style">
+                                                <i class="iconfont icon-zhongzhi"></i>重置
+                                            </div>
+                                            <div class="seach btn-style">
+                                                <i class="iconfont icon-seach1"></i>搜索
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="s-l-v">
+                                <div class="max btn-text">
+                                    <i class="iconfont icon-list"></i>详细信息
+                                </div>
+                                <div class="min btn-text">
+                                    <i class="iconfont icon-image"></i>缩略图
+                                </div>
+                            </div>
+                            <div class="s-b-btn">
+                                <div class="e_seach_btn s-ico btn-style"><i class="iconfont icon-seach1"></i></div>
+                                <div class="e_view_btn s-ico btn-style"><i class="iconfont icon-list"></i></div>
+                            </div>
+                            <input type="submit" style="display:none;" />
+
+                        </div>
+                        <div class="l-s max">
+                            <%var t_panels = ['seach','favorites','history']%>
+                            <%for(var i in t_panels){%>
+                            <div class="<%=t_panels[i]%> panel_toggle_p l-s-page" data-type="<%=t_panels[i]%>">
+                                正在加载
+                            </div>
+                            <%}%>
+                        </div>
+                    </div>
+                    <div class="file panel_toggle_p">
+                        <div class="f-group">
+                            <div class="title">载入/保存</div>
+                            <div class="btns">
+                                <span class="e_img_import btn-style"><i class="iconfont icon-icon"></i>文件导入</span>
+                                <span class="e_img_export btn-style"><i class="iconfont icon-icon"></i>文件导出</span>
+                                <span class="e_url_import btn-style"><i class="iconfont icon-url"></i>URL导入</span>
+                                <span class="e_url_export btn-style"><i class="iconfont icon-url"></i>URL导出</span>
+                            </div>
+                            <!--<span class="exp"><i class="iconfont icon-info"></i>通过图片保存selfy信息,但如果上传到会压缩图的片网站,会导致selfy信息丢失!</span>-->
+                            <span class="exp"><i class="iconfont icon-info"></i>URL导入可以从dreamself.me导入,请在使用点击full selfy/mini selfy后的网址!!</span>
+                        </div>
+                        <div class="f-group" style="display:none;">
+                            <div class="title">导出图片</div>
+                            <div class="btns">
+                                <span class="btn-style"><i class="iconfont icon-tubiao1xinchuangkoudakai"></i>打开导出工具</span>
+                            </div>
+                        </div>
+                        <div class="f-group">
+                            <div class="title">通过网站分享<span></span></div>
+                            <div class="btns">
+                                <span class="e_to_selfyme btn-style"><i class="iconfont icon-chrome"></i>在dreamself.me中编辑</span>
+                                <span class="e_to_atgame btn-style"><i class="iconfont icon-chrome"></i>打开atgames.jp flash</span>
+                            </div>
+                            <span class="exp"><i class="iconfont icon-info"></i>可以通过dreamself.me继续编辑,但是如果挑选了美版没有的数据会导致服装无法显示!</span>
+                        </div>
+                    </div>
+                    <div class="emselfy_feedback panel_toggle_p">
+                        <webview src="http://www.mikecrm.com/f.php?t=F5NG1c"></webview>
+                    </div>
+                    <div class="emselfy_config panel_toggle_p">
+                        <div>
+                            <div class="con-i">
+                                <label>
+                                    <span class="name">列表加载方式:</span>
+                                    <span class="value">
+                                        <select class="c_load_type">
+                                            <option value="1">手动翻页</option>
+                                            <option value="2">瀑布加载</option>
+                                        </select>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="sort con-i">
+                                <label>
+                                    <span class="name">优先显示语言:</span>
+                                    <span class="value">
+                                        <ul class="c_language_sort">
+                                            <%
+                                            var LNAME={
+                                            "CN":"简体中文(zh-cn)",
+                                            "US":"英语(en-US)",
+                                            "JP":"日本语(ja-jP)"
+                                            };
+                                            var LANG_SORT = JSON.parse(localStorage["language_sort"]);
+                                            %>
+                                            <%for(var i in LANG_SORT){%>
+                                            <li data-type="<%=LANG_SORT[i]%>"><%=LNAME[LANG_SORT[i]]%></li>
+                                            <%}%>
+                                        </ul>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="con-i" style="display:none;">
+                                <label>
+                                    <span class="name">自定义背景:</span>
+                                    <span class="value">
+                                        <input type="file" />
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div style="text-align:center;margin-top:300px;">
+                            <p>感谢 <a href="#" class="e-run" data-run="explorer http://weibo.com/u/3514236535">@猩红之鸟</a> <a href="#" class="e-run" data-run="explorer http://weibo.com/u/3315521501">@RE饕餮becca</a> 提供的图片</p>
+                            <p>EmSelfy 1.0 Create By <a href="#" class="e-run" data-run="explorer http://emcodes.club">EmCodes Studio 保险岛</a></p>
+                            <p>所有swf(flash)文件 版权归TinierMe开发公司所有.本软件只是集成,严谨商业用途!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+    </div>
+
+    <div class="url_dialog dialog bg" style="display:none;">
+        <dialog>
+            <p class="title">url</p>
+            <p class="content">请输入DreamSelfy或EmSelfy 的URL</p>
+            <p><input type="input" style="width:200px;"><button class="dig_btn_urlimport">导入</button><button class="dig_btn_urlclose">确定</button></p>
+        </dialog>
+    </div>
+</body>
+<script type="text/html" id="tp:selfy_item">
+    <%
+    var CATEGORY_NAME = { "motion":"动作","face":"脸部","hair":"头发","top":"上衣","bottom":"裤子",
+    "shoe":"鞋子","coat":"外套","back":"背部","hat":"帽子","accef":"眼镜",
+    "accen":"饰品1","acceh":"饰品2","ffg":"前景1","fg":"前景2","bg":"背景"};
+    var LANG_SORT = JSON.parse(localStorage["language_sort"]);
+    %>
+    <%for(var i in data.value.data){%>
+    <%var item = data.value.data[i];%>
+    <div class="l-s-item" data-category="<%=item.Category%>" data-id="<%=item.Id%>" data-favorites="<%=(item.favorites > 0)%>">
+        <%for(var j in LANG_SORT){ if(item[LANG_SORT[j]+'_Name']){%>
+        <%var name = item[LANG_SORT[j]+'_Name'];%>
+        <%break;}}%>
+        <div class="l-s-title" title="<%=name%>"><%=name%></div>
+        <div class="l-i-img">
+            <img alt="图片错误" draggable="false" src="<%=window.serverurl%>/imgs/<%=item.Category%>/<%=item.Id%>.png" />
+        </div>
+        <div class="l-i-control">
+            <div class="cat-sty">
+                <span><i class="iconfont icon-leixing"></i><%=CATEGORY_NAME[item.Category]%></span>
+                <span><i class="iconfont icon-colorlens"></i><%=item.Style%></span>
+            </div>
+            <div class="server">
+                <span><i class="iconfont icon-yuyan"></i><%=item.ServerType%></span>
+            </div>
+            <div class="control">
+                <span class="wear btn-style btn-text"><i class="iconfont icon-yifu"></i></span>
+                <span class="favorites btn-style btn-text">
+                    <%if(item.favorites > 0){%>
+                    <i class="iconfont icon-shoucang"></i>
+                    <%}else{%>
+                    <i class="iconfont icon-Collection"></i>
+                    <%}%>
+                </span>
+            </div>
+            <div class="source">
+                <%for(var j in LANG_SORT){ if(item[LANG_SORT[j]+'_Source']){%>
+                <%var source_name = item[LANG_SORT[j]+'_Source'];%>
+                <%break;}}%>
+                <span title="<%=source_name%>">
+                    <i class="coin"><%=item.Currency%></i>
+                    <%=source_name%>
+                </span>
+            </div>
+        </div>
+        <%if(item.time){%>
+        <div class="time">
+            <%=item.time%>
+        </div>
+        <%}%>
+    </div>
+    <%}%>
+    <div class="page-bottom">
+        <%query.pn = query.pn || 0; %>
+        <%if(localStorage["loadtype"] == "1"){%>
+
+        <%
+        var page_count = Math.ceil(data.value.count / data.value.pagesize);
+        var page = Math.ceil(query.pn / data.value.pagesize) + 1;
+
+        var prev = Math.max(page - 1,1),next = Math.min(page+1,page_count);
+
+        var for_num = Math.max(Math.min(page - 2,page_count - 4),1);
+        %>
+
+        <span style="float:left;">
+            共<%=data.value.count%>条,<%=page_count%>页
+        </span>
+        <span class="paging" style="float:right;">
+            <span data-p="<%=prev%>" class="btn-style">上页</span>
+            <%for(var p = for_num;p < for_num + 5 && p <= page_count; p++){%>
+            <span data-p="<%=p%>" class="btn-style <%if(p == page){%>active<%}%>"><%=p%></span>
+            <%}%>
+            <span data-p="<%=next%>" class="btn-style">下页</span>
+            <span class="input btn-style">
+                <input type="number" min="1" max="<%=page_count%>" value="<%=page_count%>" />GO!
+            </span>
+        </span>
+        <%}else{%>
+        <div class="falls">
+            <%for(var i=1;i<=10;i++){%>
+            <div class="lp l<%=i%>"></div>
+            <%}%>
+        </div>
+        <%}%>
+    </div>
+</script>
+<script type="text/html" id="tp:flash">
+    <embed src="<%=window.serverurl%>/flash/selfy.swf?server=<%=encodeURI(window.serverurl+'/')%>&<%=query%>"
+           class="selfy_flash" menu="false" quality="high" name="avatar" align="middle" width="130" height="190"
+           allowscriptaccess="always" type="application/x-shockwave-flash" wmode="transparent">
+</script>
+<script type="text/html" id="tp:effect-selfy">
+    <img draggable="false" src="<%=img%>" />
+</script>
+<script type="text/javascript">
+    var init = function () {
+        window.loadover = function () {
+            $(".load-block").css({ "opacity": "1" }).animate({ "opacity": "0" }, 300, function () {
+                $(".load-block").remove();
+            });
+        };
+
+        localStorage["loadtype"] = localStorage["loadtype"] || 1;
+        localStorage["language_sort"] = localStorage["language_sort"] || JSON.stringify(['CN', 'US', 'JP']);
+
+        $.get(window.serverurl + "/getInfo", function (data) {
+            var main = document.getElementById("tp:main");
+            $(main).wrap(baidu.template("tp:main", { data: data }));
+            $(window).trigger("init");
+
+            if (Math.random() > 0.5) {
+                console.log("使用图片!");
+                $(".l-b-img").attr("src", "../imgs/background.jpg").css("left", "-224px");
+            }
+
+            $("a.e-run").on("click", function () {
+                require('child_process').execSync($(this).data("run"));
+                return false;
+            });
+
+            setTimeout(loadover, 500);
+        }, "json");
+    }
+</script>
+</html>

@@ -1,0 +1,10 @@
+{
+  "publication": "pub",
+  "version": "1.0",
+  "listen": {
+    "min": 2338,
+    "max": 10100
+  },
+  "database": "./selfy.db",
+  "selfy-file": "./selfy.asar"
+}
