@@ -1,0 +1,6 @@
+node_modules/
+src-tauri/bin/
+src-tauri/target/
+*.log
+selfy.asar
+selfy.db

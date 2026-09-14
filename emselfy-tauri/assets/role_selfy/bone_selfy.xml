@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gcml:data xmlns:gcml="http://www.gcrest.com">
+<gcml:type name="bone"/>
+
+<swfimage id="0" path="selfy_r_humerus.swf" x="0" y="0" rotate="0" scale="1" colorId="10"/>
+<swfimage id="1" path="selfy_r_arm.swf" x="0" y="0" rotate="0" scale="1" colorId="10"/>
+<swfimage id="2" path="selfy_r_hand.swf" x="0" y="0" rotate="0" scale="1" colorId="7"/>
+<swfimage id="3" path="selfy_r_foot.swf" x="0" y="0" rotate="0" scale="1" colorId="13"/>
+<swfimage id="4" path="selfy_r_leg.swf" x="0" y="0" rotate="0" scale="1" colorId="11"/>
+<swfimage id="5" path="selfy_l_foot.swf" x="0" y="0" rotate="0" scale="1" colorId="13"/>
+<swfimage id="6" path="selfy_l_leg.swf" x="0" y="0" rotate="0" scale="1" colorId="11"/>
+<swfimage id="7" path="selfy_body1.swf" x="0" y="0" rotate="0" scale="1" colorId="2"/>
+<swfimage id="8" path="selfy_head1.swf" x="0" y="0" rotate="0" scale="1" colorId="1"/>
+<swfimage id="9" path="selfy_l_humerus.swf" x="0" y="0" rotate="0" scale="1" colorId="9"/>
+<swfimage id="10" path="selfy_l_arm.swf" x="0" y="0" rotate="0" scale="1" colorId="9"/>
+<swfimage id="11" path="selfy_l_hand.swf" x="0" y="0" rotate="0" scale="1" colorId="6"/>
+<swfimage id="12" path="selfy_ear.swf" x="0" y="0" rotate="0" scale="1" colorId="4"/>
+<swfimage id="13" path="selfy_neck.swf" x="0" y="0" rotate="0" scale="1" colorId="3"/>
+
+<bone_info name="selfy" joints="15" root="14" copy="2" frame_option="0"/>
+
+<bone id="0" parent="10" x="-0.4" y="-88.3" cx="0.05" cy="0.05"></bone>
+<bone id="1" parent="9" x="-5.8" y="-46.8" cx="-1.7" cy="-6"></bone>
+<bone id="2" parent="9" x="-6.9" y="-78" cx="-0.09999999999999964" cy="-0.55">
+ <add layer="0" swfimage="0"/></bone>
+<bone id="3" parent="2" x="-14.15" y="-60.6" cx="0.65" cy="-1.05">
+ <add layer="0" swfimage="1"/></bone>
+<bone id="4" parent="3" x="-18.3" y="-45.6" cx="-1.45" cy="-0.7" sub="1">
+ <add layer="0" swfimage="2"/></bone>
+<bone id="5" parent="6" x="-11.8" y="-27.1" cx="-1" cy="-0.45">
+ <add layer="0" swfimage="3"/></bone>
+<bone id="6" parent="14" x="-11.5" y="-47.6" cx="0" cy="0">
+ <add layer="0" swfimage="4"/></bone>
+<bone id="7" parent="8" x="0.8" y="-26.5" cx="0.1" cy="0">
+ <add layer="0" swfimage="5"/></bone>
+<bone id="8" parent="14" x="0" y="-47.2" cx="-0.8" cy="0.75">
+ <add layer="0" swfimage="6"/></bone>
+
+
+<bone id="9" parent="14" x="-5.8" y="-46.8" cx="-1.7" cy="-6">
+ <add layer="0" swfimage="7"/>
+ <add layer="1" swfimage="13"/>
+</bone>
+
+<bone id="10" parent="9" x="-0.4" y="-88.3" cx="0.05" cy="0.05">
+ <add layer="0" swfimage="12"/>
+ <add layer="1" swfimage="8"/>
+</bone>
+
+<bone id="11" parent="9" x="4.2" y="-75.825" cx="-0.2" cy="-0.8">
+ <add layer="0" swfimage="9"/></bone>
+<bone id="12" parent="13" x="9.8" y="-45.5" cx="0.05" cy="0.05" sub="1">
+ <add layer="0" swfimage="11"/></bone>
+<bone id="13" parent="11" x="7.2" y="-60.5" cx="0.05" cy="-0.15">
+ <add layer="0" swfimage="10"/></bone>
+
+<bone id="14" parent="14" x="-5.3" y="-52.8" cx="-2.2" cy="0"></bone>
+
+<unit_info parameter="5" effectlayer="4294967295"/>
+
+</gcml:data>

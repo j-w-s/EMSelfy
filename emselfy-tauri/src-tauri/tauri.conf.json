@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "EMSelfy",
+  "version": "1.0.0",
+  "identifier": "club.emcodes.emselfy",
+  "build": {
+    "frontendDist": "../assets",
+    "beforeBuildCommand": "bun run build-sidecar"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "EMSelfy",
+        "width": 910,
+        "height": 570,
+        "minWidth": 910,
+        "minHeight": 570,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": false,
+        "visible": false,
+        "url": "about:blank"
+      }
+    ],
+    "security": {
+      "csp": null
+    },
+    "withGlobalTauri": true
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "externalBin": [
+      "bin/emselfy-server"
+    ],
+    "resources": [],
+    "android": {
+      "debugApplicationIdSuffix": ".debug"
+    }
+  }
+}

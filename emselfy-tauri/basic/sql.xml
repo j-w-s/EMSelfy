@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<querys>
+  <query
+  id="queryList"
+  pageSize="40"
+  >
+    <![CDATA[
+       SELECT [c].[Id]
+		          ,[c].[US_Name]
+		          ,[c].[JP_Name]
+		          ,[c].[CN_Name]
+		          ,[c].[US_SourceId]
+		          ,[us].[name] 'US_Source'
+		          ,[c].[JP_SourceId]
+		          ,[js].[name] 'JP_Source'
+		          ,[c].[Style]
+		          ,[c].[Category]
+		          ,[c].[Currency]
+		          ,[c].[ServerType]
+		          ,[c].[Sort]
+		          ,[c].[CreateTime]
+              
+              <%if(query.type == "seach"){%>
+               
+              <%}else if(query.type == "favorites"){%>
+              ,[f].[CreateTime] 'time'
+              <%}else if(query.type == "history"){%>
+              ,[h].[CreateTime] 'time'
+              <%}%>
+              
+	          FROM [EMSelfy_Clothes] as c
+	          left join EMSelfy_Source us on us.id = US_SourceId 
+	          left join EMSelfy_Source js on js.id = JP_SourceId
+	          
+            <%if(query.type == "seach"){%>
+            
+            <%}else if(query.type == "favorites"){%>
+            inner join EMSelfy_userFavorites f on f.ClothesId = c.id
+            <%}else if(query.type == "history"){%>
+            inner join EmSelfy_userHistory h on h.ClothesId = c.id
+            <%}%>
+            
+            where 1=1
+            
+            <%if(query.id){%>
+             and c.id = $id
+            <%}else{%>
+             <%if(query.cat){%>
+              and c.Category = $cat
+              <%}%>
+            
+              <%if(query.sty){%>
+              and c.Style like @sty
+              <%}%>
+            
+              <%if(query.ser){%>
+              and (c.servertype like @ser)
+              <%}%>
+            
+              <%if(query.coi){%>
+              and c.currency = $coi
+              <%}%>
+            
+              <%if(query.sou){%>
+              and ( us.name like @sou or js.name like @sou )
+              <%}%>
+            
+              <%if(query.key){%>
+              and ( c.US_Name like @key or c.JP_Name like @key or c.CN_Name like @key )
+              <%}%>
+            <%}%>
+            
+            <%if(query.type == "seach"){%>
+            order by sort
+            <%}else if(query.type == "favorites"){%>
+            order by f.CreateTime desc,sort
+            <%}else if(query.type == "history"){%>
+            order by h.CreateTime desc,sort
+            <%}%>
+            
+            
+        limit <%= (isNaN(query.pn) ? 0 : query.pn)%>,<%=config.pageSize%>
+  ]]>
+  </query>
+  <query
+  id="queryList.count"
+  pageSize="20"
+  >
+    <![CDATA[
+       SELECT count(1) 'c' FROM [EMSelfy_Clothes] as c
+            left join EMSelfy_Source us on us.id = US_SourceId 
+            left join EMSelfy_Source js on js.id = JP_SourceId
+            
+            <%if(query.type == "seach"){%>
+            
+            <%}else if(query.type == "favorites"){%>
+            inner join EMSelfy_userFavorites f on f.ClothesId = c.id
+            <%}else if(query.type == "history"){%>
+            inner join EmSelfy_userHistory h on h.ClothesId = c.id
+            <%}%>
+            
+            where 1=1
+            
+            <%if(query.id){%>
+             and c.id = $id
+            <%}else{%>
+             <%if(query.cat){%>
+              and c.Category = $cat
+              <%}%>
+            
+              <%if(query.sty){%>
+              and c.Style like @sty
+              <%}%>
+            
+              <%if(query.ser){%>
+              and (c.servertype like @ser)
+              <%}%>
+            
+              <%if(query.coi){%>
+              and c.currency = $coi
+              <%}%>
+            
+              <%if(query.sou){%>
+              and ( us.name like @sou or js.name like @sou )
+              <%}%>
+            
+              <%if(query.key){%>
+              and ( c.US_Name like @key or c.JP_Name like @key or c.CN_Name like @key )
+              <%}%>
+            <%}%>
+            order by sort
+  ]]>
+  </query>
+  <query
+  id="queryList1"
+  pageSize="20"
+  >
+    <![CDATA[
+      select 
+      t.*
+        from (
+          select 
+	          selfy_clothes.id,
+	          selfy_clothes.category,
+	          selfy_clothes.color,
+	          selfy_clothes.currency,
+	          selfy_clothes.servertype,
+            selfy_clothes.createtime,
+	          c_l.value 'name',
+	          c_l.value1 'sort',
+	          s_l.value 'source',
+	          c_l.language
+          from selfy_clothes
+	          inner join EMSelfy_Language as c_l on 1=1
+	          and c_l.restype='selfy_clothes'
+	          and c_l.resid=selfy_clothes.id
+	          left join Selfy_Source on 1=1
+	          and Selfy_Source.id = c_l.value2
+	          left join EMSelfy_Language as s_l on 1=1
+	          and s_l.restype='selfy_source'
+	          and s_l.resid = Selfy_Source.id
+            
+            
+          
+        where 1=1
+        <%if(keys){%>
+          <%for(var i in keys){%>
+            <% var key = keys[i].replace(/'/g, "''").replace(/%/g, "%%"); %>
+            and (name like '%<%=key%>%' or selfy_clothes.category like '%<%=key%>%' or selfy_clothes.id = @key)
+          <%}%>
+        <%}%>
+      
+        <%if(query.category){%>
+        and (selfy_clothes.category = $category)
+        <%}%>
+        
+        <%if(query.servertype){%>
+        and (selfy_clothes.servertype like @servertype)
+        <%}%>
+      
+        order by c_l.language desc
+      ) t
+      <%if(query.type == 'favorites'){%>
+      inner join EmSelfy_User_Favorites on EmSelfy_User_Favorites.clothesid = t.id
+      <%}else if(query.type == 'history'){%>
+      inner join EmSelfy_User_History on EmSelfy_User_History.clothesid = t.id
+      <%}%>
+     
+      group by t.id
+      
+      <%if(query.type == 'favorites'){%>
+      order by EmSelfy_User_Favorites.createtime desc , t.sort
+      <%} else if(query.type == 'history'){%>
+      order by EmSelfy_User_History.createtime desc , t.sort
+      <%}else{%>
+       order by t.sort,t.createtime
+      <%}%>
+      limit <%= (isNaN(query.pn) ? 0 : query.pn)%>,<%=config.pageSize%>
+  ]]>
+  </query>
+</querys>
+<!-- inner join EmSelfy_User_Favorites on EmSelfy_User_Favorites.clothesid = t.id-->
