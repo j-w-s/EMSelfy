@@ -2,8 +2,10 @@ use std::sync::{Arc, Mutex};
 
 use tauri::{Emitter, Manager};
 use tauri_plugin_opener::OpenerExt;
-use tauri_plugin_shell::process::{CommandChild, CommandEvent};
-use tauri_plugin_shell::ShellExt;
+use tauri_plugin_shell::{
+    process::{CommandChild, CommandEvent},
+    ShellExt,
+};
 
 struct SidecarState(Arc<Mutex<Option<CommandChild>>>);
 
@@ -19,17 +21,23 @@ fn win_close(window: tauri::WebviewWindow) -> Result<(), String> {
 
 #[tauri::command]
 async fn open_url(app: tauri::AppHandle, url: String) -> Result<(), String> {
-    app.opener().open_url(url, None::<&str>).map_err(|e| e.to_string())
+    app.opener()
+        .open_url(url, None::<&str>)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 async fn read_text_file(path: String) -> Result<String, String> {
-    tokio::fs::read_to_string(path).await.map_err(|e| e.to_string())
+    tokio::fs::read_to_string(path)
+        .await
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
 async fn write_text_file(path: String, contents: String) -> Result<(), String> {
-    tokio::fs::write(path, contents).await.map_err(|e| e.to_string())
+    tokio::fs::write(path, contents)
+        .await
+        .map_err(|e| e.to_string())
 }
 
 fn kill_sidecar(state: &SidecarState) {
@@ -88,13 +96,15 @@ pub fn run() {
                             };
 
                             let rest = &stdout_buf[idx + "PORT:".len()..];
-                            let port: String = rest.chars().take_while(|c| c.is_ascii_digit()).collect();
+                            let port: String =
+                                rest.chars().take_while(|c| c.is_ascii_digit()).collect();
 
                             if port.is_empty() {
                                 continue;
                             }
 
-                            let url = format!("http://localhost:{}/html/index.html?port={}", port, port);
+                            let url =
+                                format!("http://localhost:{}/html/index.html?port={}", port, port);
                             let Ok(parsed) = url.parse::<tauri::Url>() else {
                                 log::error!("sidecar reported an unparseable port: {}", port);
                                 continue;
