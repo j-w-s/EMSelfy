@@ -1,44 +1,42 @@
-﻿
-
-<!DOCTYPE html>
+﻿<!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <script src="../ruffle/ruffle.js"></script>
-    <meta charset="utf-8" />
-    <title>EMSelfy! build ver 1.0!</title>
-    <link href="../css/base.css" rel="stylesheet" />
-    <link href="../jslib/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet" />
-    <link href="../jslib/jquery-ui-1.11.4.custom/jquery-ui.theme.css" rel="stylesheet" />
-    <!--<link href="../jslib/jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" rel="stylesheet" />-->
-    <link href="../iconfont/iconfont.css" rel="stylesheet" />
-    <link href="../css/index.css" rel="stylesheet" />
-    <link href="../css/common.css" rel="stylesheet" />
-    <script>
-        utils = require("../js/utils.js");
-        window.baidu = require("../jslib/baiduTemplate.js");
+    <head>
+        <script src="../ruffle/ruffle.js"></script>
+        <meta charset="utf-8">
+        <title>EMSelfy! build ver 1.0!</title>
+        <link href="../css/base.css" rel="stylesheet">
+        <link href="../jslib/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet">
+        <link href="../jslib/jquery-ui-1.11.4.custom/jquery-ui.theme.css" rel="stylesheet">
+        <!--<link href="../jslib/jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" rel="stylesheet" />-->
+        <link href="../iconfont/iconfont.css" rel="stylesheet">
+        <link href="../css/index.css" rel="stylesheet">
+        <link href="../css/common.css" rel="stylesheet">
+        <script>
+        utils = require('../js/utils.js');
+        window.baidu = require('../jslib/baiduTemplate.js');
         window.template = baidu.template;
-    </script>
+        </script>
 
-    <script src="../js/common.js"></script>
-    <script src="../js/index.js"></script>
-</head>
-<body class="nosel curdef">
+        <script src="../js/common.js"></script>
+        <script src="../js/index.js"></script>
+        <script src="../js/translations.js"></script>
+        <script src="../js/translate.js"></script>
+    </head>
 
-    <div class="win-div">
-        <header class="win-title drag curdef">
-            <ul class="nodrag nosel">
-                <li id="win_btn_min" class="win-btn min"></li>
-                <li id="win_btn_max" class="win-btn max"></li>
-                <li id="win_btn_close" class="win-btn close"></li>
-            </ul>
-            <h1>EMSelfy! build ver 1.0(正式版)</h1>
-        </header>
-        <div class="load-block curdef">
-            <span>
-                EmSelfy
-            </span>
-        </div>
-        <script type="text/html" id="tp:main">
+    <body class="nosel curdef">
+        <div class="win-div">
+            <header class="win-title drag curdef">
+                <ul class="nodrag nosel">
+                    <li id="win_btn_min" class="win-btn min"></li>
+                    <li id="win_btn_max" class="win-btn max"></li>
+                    <li id="win_btn_close" class="win-btn close"></li>
+                </ul>
+                <h1>EMSelfy! build ver 1.0(正式版)</h1>
+            </header>
+            <div class="load-block curdef">
+                <span> EmSelfy </span>
+            </div>
+            <script type="text/html" id="tp:main">
             <div class="win-main">
                 <div class="l-bar min">
                     <img src="../imgs/background.png" class="l-b-img" />
@@ -355,17 +353,21 @@
                 </div>
             </div>
         </script>
-    </div>
+        </div>
 
-    <div class="url_dialog dialog bg" style="display:none;">
-        <dialog>
-            <p class="title">url</p>
-            <p class="content">请输入DreamSelfy或EmSelfy 的URL</p>
-            <p><input type="input" style="width:200px;"><button class="dig_btn_urlimport">导入</button><button class="dig_btn_urlclose">确定</button></p>
-        </dialog>
-    </div>
-</body>
-<script type="text/html" id="tp:selfy_item">
+        <div class="url_dialog dialog bg" style="display:none;">
+            <dialog>
+                <p class="title">url</p>
+                <p class="content">请输入DreamSelfy或EmSelfy 的URL</p>
+                <p>
+                    <input type="input" style="width:200px;">
+                    <button class="dig_btn_urlimport">导入</button
+                    ><button class="dig_btn_urlclose">确定</button>
+                </p>
+            </dialog>
+        </div>
+    </body>
+    <script type="text/html" id="tp:selfy_item">
     <%
     var CATEGORY_NAME = { "motion":"动作","face":"脸部","hair":"头发","top":"上衣","bottom":"裤子",
     "shoe":"鞋子","coat":"外套","back":"背部","hat":"帽子","accef":"眼镜",
@@ -452,42 +454,49 @@
         <%}%>
     </div>
 </script>
-<script type="text/html" id="tp:flash">
+    <script type="text/html" id="tp:flash">
     <embed src="<%=window.serverurl%>/flash/selfy.swf?server=<%=encodeURI(window.serverurl+'/')%>&<%=query%>"
            class="selfy_flash" menu="false" quality="high" name="avatar" align="middle" width="130" height="190"
            allowscriptaccess="always" type="application/x-shockwave-flash" wmode="transparent">
 </script>
-<script type="text/html" id="tp:effect-selfy">
+    <script type="text/html" id="tp:effect-selfy">
     <img draggable="false" src="<%=img%>" />
 </script>
-<script type="text/javascript">
+    <script type="text/javascript">
     var init = function () {
         window.loadover = function () {
-            $(".load-block").css({ "opacity": "1" }).animate({ "opacity": "0" }, 300, function () {
-                $(".load-block").remove();
-            });
+            $('.load-block')
+                .css({ opacity: '1' })
+                .animate({ opacity: '0' }, 300, function () {
+                    $('.load-block').remove();
+                });
         };
 
-        localStorage["loadtype"] = localStorage["loadtype"] || 1;
-        localStorage["language_sort"] = localStorage["language_sort"] || JSON.stringify(['CN', 'US', 'JP']);
+        localStorage['loadtype'] = localStorage['loadtype'] || 1;
+        localStorage['language_sort'] =
+            localStorage['language_sort'] || JSON.stringify(['CN', 'US', 'JP']);
 
-        $.get(window.serverurl + "/getInfo", function (data) {
-            var main = document.getElementById("tp:main");
-            $(main).wrap(baidu.template("tp:main", { data: data }));
-            $(window).trigger("init");
+        $.get(
+            window.serverurl + '/getInfo',
+            function (data) {
+                var main = document.getElementById('tp:main');
+                $(main).wrap(baidu.template('tp:main', { data: data }));
+                $(window).trigger('init');
 
-            if (Math.random() > 0.5) {
-                console.log("使用图片!");
-                $(".l-b-img").attr("src", "../imgs/background.jpg").css("left", "-224px");
-            }
+                if (Math.random() > 0.5) {
+                    console.log('使用图片!');
+                    $('.l-b-img').attr('src', '../imgs/background.jpg').css('left', '-224px');
+                }
 
-            $("a.e-run").on("click", function () {
-                require('child_process').execSync($(this).data("run"));
-                return false;
-            });
+                $('a.e-run').on('click', function () {
+                    require('child_process').execSync($(this).data('run'));
+                    return false;
+                });
 
-            setTimeout(loadover, 500);
-        }, "json");
-    }
-</script>
+                setTimeout(loadover, 500);
+            },
+            'json',
+        );
+    };
+    </script>
 </html>

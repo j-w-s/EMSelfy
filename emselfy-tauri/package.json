@@ -1,16 +1,20 @@
 {
-  "name": "EMSelfy",
-  "productName": "EmCodes Selfy",
-  "main": "main.js",
-  "version": "1.0.0",
-  "dependencies": {
-    "ejs": "^6.0.1",
-    "js-htmlencode": "^0.3.0",
-    "xml": "^1.0.1",
-    "xml2js": "^0.6.2"
-  },
-  "scripts": {
-    "build-sidecar": "node scripts/build-sidecar.js",
-    "start": "cargo tauri dev"
-  }
+    "name": "EMSelfy",
+    "productName": "EmCodes Selfy",
+    "main": "main.js",
+    "version": "1.0.0",
+    "dependencies": {
+        "ejs": "^6.0.1",
+        "js-htmlencode": "^0.3.0",
+        "xml": "^1.0.1",
+        "xml2js": "^0.6.2"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.5.7"
+    },
+    "scripts": {
+        "format": "biome format --write .",
+        "build-sidecar": "node scripts/build-sidecar.js",
+        "start": "cargo tauri dev"
+    }
 }

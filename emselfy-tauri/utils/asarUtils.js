@@ -1,4 +1,4 @@
-var fs = require("fs");
+var fs = require('fs');
 
 var _headerCache = {};
 
@@ -12,11 +12,11 @@ var readHeader = function (fd) {
     fs.readSync(fd, inner, 0, outerPickleSize, 8);
 
     var jsonLen = inner.readUInt32LE(4);
-    var json = inner.slice(8, 8 + jsonLen).toString("utf8");
+    var json = inner.slice(8, 8 + jsonLen).toString('utf8');
 
     return {
         header: JSON.parse(json),
-        dataOffset: 8 + outerPickleSize
+        dataOffset: 8 + outerPickleSize,
     };
 };
 
@@ -24,7 +24,7 @@ var getCachedHeader = function (asarPath) {
     if (_headerCache[asarPath]) {
         return _headerCache[asarPath];
     }
-    var fd = fs.openSync(asarPath, "r");
+    var fd = fs.openSync(asarPath, 'r');
     try {
         var parsed = readHeader(fd);
         _headerCache[asarPath] = parsed;
@@ -35,11 +35,15 @@ var getCachedHeader = function (asarPath) {
 };
 
 var findEntry = function (header, relativePath) {
-    var parts = relativePath.split(/[\/\\]/).filter(function (p) { return p.length > 0; });
+    var parts = relativePath.split(/[\/\\]/).filter(function (p) {
+        return p.length > 0;
+    });
     var node = header;
 
     for (var i = 0; i < parts.length; i++) {
-        if (!node || !node.files || !node.files[parts[i]]) { return null; }
+        if (!node || !node.files || !node.files[parts[i]]) {
+            return null;
+        }
         node = node.files[parts[i]];
     }
 
@@ -61,10 +65,10 @@ exports.readFileSync = function (asarPath, relativePath) {
     var entry = findEntry(parsed.header, relativePath);
 
     if (!entry || entry.size === undefined) {
-        throw new Error("asar: file not found: " + relativePath);
+        throw new Error('asar: file not found: ' + relativePath);
     }
 
-    var fd = fs.openSync(asarPath, "r");
+    var fd = fs.openSync(asarPath, 'r');
     try {
         var offset = parsed.dataOffset + parseInt(entry.offset, 10);
         var buffer = Buffer.alloc(entry.size);
