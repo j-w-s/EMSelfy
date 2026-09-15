@@ -1,7 +1,13 @@
-﻿@charset "utf-8";
+@charset "utf-8";
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 
 html {
-    color: #333;
+    color: #0a0a0a;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
 }
@@ -74,9 +80,11 @@ input,
 select,
 textarea {
     font:
-        12px / 1.5 tahoma,
+        12px / 1.5 'Michroma',
+        'Segoe UI',
+        tahoma,
         arial,
-        \5b8b\4f53;
+        sans-serif;
 }
 
 input,
@@ -145,8 +153,8 @@ h6 {
     font-weight: 500;
 }
 
-q:before,
-q:after {
+q::before,
+q::after {
     content: '';
 }
 
@@ -166,20 +174,24 @@ sub {
     bottom: -0.25em;
 }
 
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
 a:hover {
     text-decoration: none;
 }
 
-ins,
-a {
+ins {
     text-decoration: none;
 }
 
-.clearfix:after {
+.clearfix::after {
     visibility: hidden;
     display: block;
     font-size: 0;
-    content: ' ';
+    content: '';
     clear: both;
     height: 0;
 }

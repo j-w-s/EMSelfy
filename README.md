@@ -23,4 +23,13 @@ bun build-sidecar
 bun start
 ```
 
+## Tauri (2026 Redesign)
+
+```bash
+cd emselfy-tauri-2026
+bun install
+bun build-sidecar
+bun start
+```
+
 All credit for the original game, assets, and concept goes to the original developers and artists of TinierMe and EMSelfy. I claim no ownership of any assets used in this project. You met me at a very Chinese time in my life.
