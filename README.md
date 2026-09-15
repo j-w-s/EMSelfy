@@ -32,4 +32,9 @@ bun build-sidecar
 bun start
 ```
 
+![EMSelfy 2026 Redesign 1](assets/emselfy-tauri-2026-image-1.png)
+![EMSelfy 2026 Redesign 2](assets/emselfy-tauri-2026-image-2.png)
+![EMSelfy 2026 Redesign 3](assets/emselfy-tauri-2026-image-3.png)
+![EMSelfy 2026 Redesign 4](assets/emselfy-tauri-2026-image-4.png)
+
 All credit for the original game, assets, and concept goes to the original developers and artists of TinierMe and EMSelfy. I claim no ownership of any assets used in this project. You met me at a very Chinese time in my life.
