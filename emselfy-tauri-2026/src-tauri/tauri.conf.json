@@ -37,7 +37,9 @@
             "icons/icon.icns",
             "icons/icon.ico"
         ],
-        "externalBin": ["bin/emselfy-server"],
+        "externalBin": [
+            "bin/emselfy-server"
+        ],
         "resources": [],
         "android": {
             "debugApplicationIdSuffix": ".debug"

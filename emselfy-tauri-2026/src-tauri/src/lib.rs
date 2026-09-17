@@ -1,5 +1,6 @@
 use std::sync::{Arc, Mutex};
 
+use tauri::ipc::CapabilityBuilder;
 use tauri::{Emitter, Manager};
 use tauri_plugin_opener::OpenerExt;
 use tauri_plugin_shell::{
@@ -17,6 +18,16 @@ fn win_minimize(window: tauri::WebviewWindow) -> Result<(), String> {
 #[tauri::command]
 fn win_close(window: tauri::WebviewWindow) -> Result<(), String> {
     window.close().map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn win_toggle_maximize(window: tauri::WebviewWindow) -> Result<(), String> {
+    let is_maximized = window.is_maximized().map_err(|e| e.to_string())?;
+    if is_maximized {
+        window.unmaximize().map_err(|e| e.to_string())
+    } else {
+        window.maximize().map_err(|e| e.to_string())
+    }
 }
 
 #[tauri::command]
@@ -58,6 +69,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             win_minimize,
             win_close,
+            win_toggle_maximize,
             open_url,
             read_text_file,
             write_text_file
@@ -103,12 +115,22 @@ pub fn run() {
                                 continue;
                             }
 
-                            let url =
-                                format!("http://localhost:{}/html/index.html?port={}", port, port);
+                            let origin = format!("http://localhost:{}", port);
+                            let url = format!("{}/html/index.html?port={}", origin, port);
                             let Ok(parsed) = url.parse::<tauri::Url>() else {
                                 log::error!("sidecar reported an unparseable port: {}", port);
                                 continue;
                             };
+
+                            if let Err(e) = app_handle.add_capability(
+                                CapabilityBuilder::new("sidecar-remote")
+                                    .remote(origin)
+                                    .window("main")
+                                    .permission("core:default")
+                                    .permission("dialog:default"),
+                            ) {
+                                log::error!("failed to register sidecar IPC capability: {}", e);
+                            }
 
                             if let Some(window) = app_handle.get_webview_window("main") {
                                 let _ = window.navigate(parsed);
