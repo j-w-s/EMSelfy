@@ -75,7 +75,7 @@ var EMSELFY_TRANSLATIONS = {
     历史: 'History',
     上页: 'Previous Page',
     下页: 'Next Page',
-    页: 'Page',
+    页: 'pages',
     条: 'items',
     共: 'Total',
     图片错误: 'Image Error',

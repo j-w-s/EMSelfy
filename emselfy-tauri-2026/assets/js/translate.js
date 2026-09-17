@@ -34,7 +34,7 @@
         'RUFFLE-PLAYER': true,
     };
 
-    var ATTRS_TO_TRANSLATE = ['placeholder', 'title', 'alt'];
+    var ATTRS_TO_TRANSLATE = ['placeholder', 'title', 'alt', 'aria-label'];
 
     function translateElementAttributes(el) {
         for (var i = 0; i < ATTRS_TO_TRANSLATE.length; i++) {

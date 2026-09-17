@@ -378,8 +378,8 @@ $(window).on('init', function () {
                     goPage(old, $(this).data('p'));
                 });
 
-                $('.page-bottom .paging .input input', $box).on('click', () => false);
-                $('.page-bottom .paging .input', $box).on('click', function () {
+                $('.page-bottom .paging .pg-jump input', $box).on('click', () => false);
+                $('.page-bottom .paging .pg-jump', $box).on('click', function () {
                     const old = $(this).parents(`.${params.query.type}`).data('params');
                     goPage(old, $('input', this).val());
                 });

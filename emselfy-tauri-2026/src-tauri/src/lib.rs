@@ -1,6 +1,5 @@
 use std::sync::{Arc, Mutex};
 
-use tauri::ipc::CapabilityBuilder;
 use tauri::{Emitter, Manager};
 use tauri_plugin_opener::OpenerExt;
 use tauri_plugin_shell::{
@@ -115,22 +114,11 @@ pub fn run() {
                                 continue;
                             }
 
-                            let origin = format!("http://localhost:{}", port);
-                            let url = format!("{}/html/index.html?port={}", origin, port);
+                            let url = format!("http://localhost:{}/html/index.html?port={}", port, port);
                             let Ok(parsed) = url.parse::<tauri::Url>() else {
                                 log::error!("sidecar reported an unparseable port: {}", port);
                                 continue;
                             };
-
-                            if let Err(e) = app_handle.add_capability(
-                                CapabilityBuilder::new("sidecar-remote")
-                                    .remote(origin)
-                                    .window("main")
-                                    .permission("core:default")
-                                    .permission("dialog:default"),
-                            ) {
-                                log::error!("failed to register sidecar IPC capability: {}", e);
-                            }
 
                             if let Some(window) = app_handle.get_webview_window("main") {
                                 let _ = window.navigate(parsed);

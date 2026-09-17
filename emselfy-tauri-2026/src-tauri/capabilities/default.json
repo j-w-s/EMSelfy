@@ -5,6 +5,12 @@
     "windows": [
         "main"
     ],
+    "remote": {
+        "urls": [
+            "http://localhost:*",
+            "http://127.0.0.1:*"
+        ]
+    },
     "permissions": [
         "core:default",
         "core:window:allow-start-dragging",
@@ -13,6 +19,12 @@
         "core:window:allow-unmaximize",
         "core:window:allow-close",
         "dialog:default",
+        "allow-win-minimize",
+        "allow-win-close",
+        "allow-win-toggle-maximize",
+        "allow-open-url",
+        "allow-read-text-file",
+        "allow-write-text-file",
         {
             "identifier": "shell:allow-spawn",
             "allow": [
