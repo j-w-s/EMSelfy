@@ -1,4 +1,4 @@
-﻿(function ($) {
+(($) => {
     $.widget('custom.combobox', {
         _create() {
             this.wrapper = $('<span>').addClass('custom-combobox').insertAfter(this.element);
@@ -24,8 +24,7 @@
                 .val(value)
                 .attr('title', '')
                 .addClass(
-                    'custom-combobox-input ui-widget ui-widget-content ' +
-                        'ui-state-default ui-corner-left',
+                    'custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left',
                 )
                 .autocomplete({
                     delay: 0,

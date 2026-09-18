@@ -1,4 +1,4 @@
-var EMSELFY_TRANSLATIONS = {
+window.EMSELFY_TRANSLATIONS = {
     搜索: 'Search',
     类型: 'Type',
     全部: 'All',

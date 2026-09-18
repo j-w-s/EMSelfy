@@ -1,5 +1,5 @@
-var str = require('../utils/stringUtils.js');
-var lib = {
+const str = require('../utils/stringUtils.js');
+const lib = {
     fs: require('fs'),
     path: require('path'),
     qs: require('querystring'),
@@ -12,23 +12,44 @@ var lib = {
     guid: () => require('crypto').randomUUID(),
 };
 
-var config = lib.config.getConfig();
+const config = lib.config.getConfig();
 
-var _db = new lib.sqlite.Database(lib.path.join(__dirname, '../', config['database']));
-var db = {
+const _db = new lib.sqlite.Database(lib.path.join(__dirname, '../', config['database']));
+const db = {
     db: _db,
     user: require('../database/user.js').create(_db),
     selfy: require('../database/selfy.js').create(_db),
 };
 
-var $u = require('../utils/utils.js');
+const $u = require('../utils/utils.js');
 
-var prot = 0;
+const ContentType = JSON.parse(
+    lib.fs.readFileSync(lib.path.join(__dirname, '../basic/contentType.json'), 'utf8'),
+);
+
+function getContentType(name) {
+    const e = lib.path.parse(name);
+    return ContentType[e.ext] || ContentType['.'];
+}
+
+function jsonResponder(response) {
+    return (code, obj) => {
+        response.writeHead(code, {
+            'content-type': 'application/json',
+            'x-power-by': 'blog.emcodes.club charitable project',
+        });
+        response.write(JSON.stringify(obj));
+        response.end();
+    };
+}
+
+let prot = 0;
+
 exports.init = function (p) {
     prot = p;
     db.user.serialize();
     db.selfy.serialize();
-    setImmediate(function () {
+    setImmediate(() => {
         try {
             lib.asar.exists(lib.path.join(__dirname, '../', config['selfy-file']), '/imgs');
         } catch (e) {}
@@ -37,7 +58,7 @@ exports.init = function (p) {
 };
 
 exports.server = function (request, response) {
-    var remoteAddress = request.connection.remoteAddress;
+    const remoteAddress = request.connection.remoteAddress;
     if (
         remoteAddress != '127.0.0.1' &&
         remoteAddress != '::1' &&
@@ -47,46 +68,23 @@ exports.server = function (request, response) {
         response.end();
         return;
     }
-    var _dir = lib.path.parse(__dirname).dir;
 
-    var parsed = new URL(request.url, 'http://localhost');
-    var url = { pathname: parsed.pathname };
-    var query = lib.qs.parse(parsed.searchParams.toString());
+    const _dir = lib.path.parse(__dirname).dir;
+    const parsed = new URL(request.url, 'http://localhost');
+    const url = { pathname: parsed.pathname };
+    const query = lib.qs.parse(parsed.searchParams.toString());
+    const pathname = url.pathname.toLocaleLowerCase();
 
-    if (url.pathname.toLocaleLowerCase() == '/getinfo') {
-        getInfo(url, query, request, response);
-        return;
+    if (pathname == '/getinfo') return getInfo(url, query, request, response);
+    if (pathname == '/getclothesinfo.do') return getClothesInfo(url, query, request, response);
+    if (str.startsWith(pathname, '/clothes/') || str.startsWith(pathname, '/imgs/')) {
+        return getClothes(url, query, request, response);
     }
+    if (pathname == '/getlist') return getList(url, query, request, response);
+    if (pathname == '/favorites') return favorites(url, query, request, response);
+    if (pathname == '/history') return history(url, query, request, response);
 
-    if (url.pathname.toLocaleLowerCase() == '/getclothesinfo.do') {
-        getClothesInfo(url, query, request, response);
-        return;
-    }
-
-    if (
-        str.startsWith(url.pathname.toLocaleLowerCase(), '/clothes/') ||
-        str.startsWith(url.pathname.toLocaleLowerCase(), '/imgs/')
-    ) {
-        getClothes(url, query, request, response);
-        return;
-    }
-
-    if (url.pathname.toLocaleLowerCase() == '/getlist') {
-        getList(url, query, request, response);
-        return;
-    }
-
-    if (url.pathname.toLocaleLowerCase() == '/favorites') {
-        favorites(url, query, request, response);
-        return;
-    }
-
-    if (url.pathname.toLocaleLowerCase() == '/history') {
-        history(url, query, request, response);
-        return;
-    }
-
-    var p = lib.path.join(_dir, 'assets', url.pathname.replace(/\.\//g, ''));
+    const p = lib.path.join(_dir, 'assets', url.pathname.replace(/\.\//g, ''));
 
     if (!lib.fs.existsSync(p)) {
         response.writeHead(401);
@@ -94,28 +92,19 @@ exports.server = function (request, response) {
         response.end();
         return;
     }
-    lib.fs.readFile(p, undefined, function (err, b) {
+    lib.fs.readFile(p, undefined, (err, b) => {
         response.writeHead(200, {
             'content-type': getContentType(url.pathname),
         });
         response.write(b);
         response.end();
     });
-    return;
 };
 
-var ContentType = JSON.parse(
-    lib.fs.readFileSync(lib.path.join(__dirname, '../basic/contentType.json'), 'utf8').toString(),
-);
-var getContentType = function (name) {
-    var e = lib.path.parse(name);
-    return ContentType[e.ext] || ContentType['.'];
-};
-
-var getInfo = function (url, query, request, response) {
+function getInfo(url, query, request, response) {
     //准备sql语句
-    var source_sql = "SELECT [Name] 'value' FROM [EMSelfy_Source]";
-    var style_sql =
+    const source_sql = "SELECT [Name] 'value' FROM [EMSelfy_Source]";
+    const style_sql =
         "select style 'style' from ( " +
         'select style, count(1) c ' +
         'from EMSelfy_Clothes ' +
@@ -123,22 +112,17 @@ var getInfo = function (url, query, request, response) {
         ') ' +
         'order by c desc';
 
-    var infoDb = new lib.sqlite.Database(lib.path.join(__dirname, '../', config['database']));
+    const infoDb = new lib.sqlite.Database(lib.path.join(__dirname, '../', config['database']));
     try {
-        var sources = $u.array.select(infoDb.query(source_sql).all(), function (v) {
-            return v['value'];
-        });
-        var styles = $u.array.select(infoDb.query(style_sql).all(), function (v) {
-            return v['style'];
-        });
+        const sources = $u.array.select(infoDb.query(source_sql).all(), (v) => v['value']);
+        const styles = $u.array.select(infoDb.query(style_sql).all(), (v) => v['style']);
 
         //处理并返回xml数据
-        var data = JSON.stringify({ sources: sources, styles: styles });
+        const data = JSON.stringify({ sources, styles });
 
         response.writeHead(200, {
             'content-type': 'text/json',
         });
-
         response.write(data);
         response.end();
     } catch (e) {
@@ -148,35 +132,31 @@ var getInfo = function (url, query, request, response) {
     } finally {
         infoDb.close();
     }
-};
+}
 
-var getClothesInfo = function (url, query, request, response) {
-    db.selfy.getClohesInfo(query, function (err, rows) {
-        var data = $u.array.select(rows, function (row) {
-            return {
-                accessory: { _attr: { category: row.Category, id: row.ClothesId, part: row.Part } },
-            };
-        });
+function getClothesInfo(url, query, request, response) {
+    const rows = db.selfy.getClohesInfo(query);
+    const data = $u.array.select(rows, (row) => ({
+        accessory: { _attr: { category: row.Category, id: row.ClothesId, part: row.Part } },
+    }));
 
-        var xml_txt = lib.xml(data);
-        response.writeHead(200, {
-            'content-type': getContentType('0.xml'),
-            'content-length': xml_txt.length,
-            'x-power-by': 'blog.emcodes.club charitable project',
-        });
-
-        response.write(xml_txt);
-        response.end();
+    const xml_txt = lib.xml(data);
+    response.writeHead(200, {
+        'content-type': getContentType('0.xml'),
+        'content-length': xml_txt.length,
+        'x-power-by': 'blog.emcodes.club charitable project',
     });
-};
+    response.write(xml_txt);
+    response.end();
+}
 
-var getClothes = function (url, query, request, response) {
-    var archivePath = lib.path.join(__dirname, '../', config['selfy-file']);
-    var _dir = lib.path.parse(__dirname).dir;
+function getClothes(url, query, request, response) {
+    const archivePath = lib.path.join(__dirname, '../', config['selfy-file']);
+    const _dir = lib.path.parse(__dirname).dir;
 
     // Try asar first (clothing sprites), then fall back to plain files in assets/
     if (lib.asar.exists(archivePath, url.pathname)) {
-        var asarBuf = lib.asar.readFileSync(archivePath, url.pathname);
+        const asarBuf = lib.asar.readFileSync(archivePath, url.pathname);
         response.writeHead(200, {
             'content-type': getContentType(url.pathname),
             'content-length': asarBuf.length,
@@ -186,9 +166,9 @@ var getClothes = function (url, query, request, response) {
         return;
     }
 
-    var fsPath = lib.path.join(_dir, 'assets', url.pathname);
+    const fsPath = lib.path.join(_dir, 'assets', url.pathname);
     if (lib.fs.existsSync(fsPath)) {
-        lib.fs.readFile(fsPath, undefined, function (err, b) {
+        lib.fs.readFile(fsPath, undefined, (err, b) => {
             if (err) {
                 response.writeHead(500);
                 response.end();
@@ -206,109 +186,61 @@ var getClothes = function (url, query, request, response) {
 
     response.writeHead(404);
     response.end();
-};
+}
 
-var getList = function (url, query, request, response) {
-    var keys = query.key && query.key.replace(/\+/g, ' ').replace(/\s+/g, ' ').trim();
-    var params = $u.seach.toObj(keys);
+function getList(url, query, request, response) {
+    const keys = query.key && query.key.replace(/\+/g, ' ').replace(/\s+/g, ' ').trim();
+    const params = $u.seach.toObj(keys);
 
     params['_'] && (params['key'] = params['_']);
-
-    params.pn = parseInt(query.pn);
+    params.pn = Number.parseInt(query.pn);
     params.type = query.type;
 
-    var resp = function (code, obj) {
-        response.writeHead(code, {
-            'content-type': 'application/json',
-            'x-power-by': 'blog.emcodes.club charitable project',
-        });
+    const resp = jsonResponder(response);
 
-        response.write(JSON.stringify(obj));
-        response.end();
-    };
-
-    db.selfy.getList(params, function (err, data) {
-        if (err) {
-            resp(500, { code: -1, msg: '操作数据库时发生错误!', value: data });
-            return;
-        }
+    try {
+        const data = db.selfy.getList(params);
         resp(200, { code: 1, msg: 'Success!', value: data });
-    });
-};
+    } catch (e) {
+        resp(500, { code: -1, msg: '操作数据库时发生错误!', value: {} });
+    }
+}
 
-var favorites = function (url, query, request, response) {
-    var resp = function (code, obj) {
-        response.writeHead(code, {
-            'content-type': 'application/json',
-            'x-power-by': 'blog.emcodes.club charitable project',
-        });
+// Runs a synchronous db action and writes the standard success/error JSON shape.
+function respondToAction(resp, action) {
+    try {
+        action();
+        resp(200, { code: 1, msg: 'Success!' });
+    } catch (e) {
+        resp(500, { code: -1, msg: '操作数据库时出现错误!' });
+    }
+}
 
-        response.write(JSON.stringify(obj));
-        response.end();
-    };
+function favorites(url, query, request, response) {
+    const resp = jsonResponder(response);
 
     switch (query.action) {
         case 'add':
-            db.user.addFavorites(query.id, function (err) {
-                if (err) {
-                    resp(500, { code: -1, msg: '操作数据库时出现错误!' });
-                    return;
-                }
-                resp(200, { code: 1, msg: 'Success!' });
-            });
+            respondToAction(resp, () => db.user.addFavorites(query.id));
             break;
-
         case 'del':
-            db.user.delFavorites(query.id, function (err) {
-                if (err) {
-                    resp(500, { code: -1, msg: '操作数据库时出现错误!' });
-                    return;
-                }
-                resp(200, { code: 1, msg: 'Success!' });
-            });
+            respondToAction(resp, () => db.user.delFavorites(query.id));
             break;
     }
-};
+}
 
-var history = function (url, query, request, response) {
-    var resp = function (code, obj) {
-        response.writeHead(code, {
-            'content-type': 'application/json',
-            'x-power-by': 'blog.emcodes.club charitable project',
-        });
-
-        response.write(JSON.stringify(obj));
-        response.end();
-    };
+function history(url, query, request, response) {
+    const resp = jsonResponder(response);
 
     switch (query.action) {
         case 'add':
-            db.user.addHistory(query.ids, function (err) {
-                if (err) {
-                    resp(500, { code: -1, msg: '操作数据库时出现错误!' });
-                    return;
-                }
-                resp(200, { code: 1, msg: 'Success!' });
-            });
-
+            respondToAction(resp, () => db.user.addHistory(query.ids));
             break;
         case 'del':
-            db.user.delHistory(query.id, function (err) {
-                if (err) {
-                    resp(500, { code: -1, msg: '操作数据库时出现错误!' });
-                    return;
-                }
-                resp(200, { code: 1, msg: 'Success!' });
-            });
+            respondToAction(resp, () => db.user.delHistory(query.id));
             break;
         case 'clear':
-            db.user.clearHistory(query.id, function (err) {
-                if (err) {
-                    resp(500, { code: -1, msg: '操作数据库时出现错误!' });
-                    return;
-                }
-                resp(200, { code: 1, msg: 'Success!' });
-            });
+            respondToAction(resp, () => db.user.clearHistory(query.id));
             break;
     }
-};
+}

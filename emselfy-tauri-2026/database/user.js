@@ -4,138 +4,116 @@
  * 保险岛 last change 2016-01-08 21:08
  */
 
-var lib = {
+const lib = {
     sqlite: require('bun:sqlite'),
-    fs: require('fs'),
     guid: () => require('crypto').randomUUID(),
     str: require('../utils/stringUtils.js'),
     $u: require('../utils/utils.js'),
-    $func: require('../utils/func.js'),
 };
 
-var _obj = function (a) {
+function Selfy(a) {
     this._db = typeof a == 'string' ? new lib.sqlite.Database(a) : a;
-    var self = this;
-    this._db.exec = function (sql, cb) {
-        try {
-            self._db.query(sql).run();
-            if (cb) cb(null);
-        } catch (e) {
-            if (cb) cb(e);
-        }
-    };
-    this._db.serialize = function (fn) {
-        if (fn) fn();
-    };
-};
+}
 
-_obj.prototype = {
-    serialize: function (callback) {
-        var $this = this;
-        $this._db.serialize(function () {
-            $this._initDB(lib.$func.proxy(callback, $this));
-        });
+Selfy.prototype = {
+    serialize() {
+        this._initDB();
     },
-    close: function () {
+    close() {
         this._db.close();
     },
     //
     //begin private
-    _initDB: function (callback) {
-        var sql =
-            'CREATE TABLE IF NOT EXISTS [EMSelfy_userFavorites] (         \n' +
-            '   [Id] nvarchar(40) COLLATE NOCASE NOT NULL PRIMARY KEY,  \n' +
-            '   [ClothesId] integer,                                    \n' +
-            '   [CreateTime] datetime                                   \n' +
-            ');                                                         \n' +
-            'CREATE TABLE IF NOT EXISTS [EmSelfy_userHistory] (         \n' +
-            '   [Id] nvarchar(40) COLLATE NOCASE NOT NULL PRIMARY KEY,  \n' +
-            '   [ClothesId] integer,                                    \n' +
-            '   [CreateTime] datetime                                   \n' +
-            ');';
-
-        this._db.exec(sql, lib.$func.proxy(callback, this));
+    _initDB() {
+        this._db.exec(`CREATE TABLE IF NOT EXISTS [EMSelfy_userFavorites] (
+    [Id] nvarchar(40) COLLATE NOCASE NOT NULL PRIMARY KEY,
+    [ClothesId] integer,
+    [CreateTime] datetime
+);
+CREATE TABLE IF NOT EXISTS [EmSelfy_userHistory] (
+    [Id] nvarchar(40) COLLATE NOCASE NOT NULL PRIMARY KEY,
+    [ClothesId] integer,
+    [CreateTime] datetime
+);`);
     },
     //end private
     //
 
     //
     //begin favorites
-    addFavorites: function (ids, callback) {
+    addFavorites(ids) {
         ids = ids instanceof Array ? ids : [ids];
         if (ids.length == 0) return;
 
-        this.delFavorites(ids, function () {
-            var sql = 'insert into EMSelfy_userFavorites(Id,ClothesId,CreateTime) values ';
+        this.delFavorites(ids);
 
-            sql += lib.$u.array
-                .select(ids, function (item) {
-                    return lib.str.format(
-                        "('{0}','{1}','{2}')",
-                        lib.guid(),
-                        item,
-                        lib.str.timeFormat(new Date(), 'yyyy-MM-dd HH:mm:ss'),
-                    );
-                })
-                .join(',');
+        const values = lib.$u.array
+            .select(ids, (item) =>
+                lib.str.format(
+                    "('{0}','{1}','{2}')",
+                    lib.guid(),
+                    item,
+                    lib.str.timeFormat(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+                ),
+            )
+            .join(',');
 
-            this._db.exec(sql, lib.$func.proxy(callback, this));
-        });
+        this._db.exec(
+            'insert into EMSelfy_userFavorites(Id,ClothesId,CreateTime) values ' + values,
+        );
     },
-    delFavorites: function (ids, callback) {
+    delFavorites(ids) {
         ids = ids instanceof Array ? ids : [ids];
         if (ids.length == 0) return;
 
-        var sql = 'delete from EMSelfy_userFavorites where [ClothesId] in ({0})';
+        const sql = lib.str.format(
+            'delete from EMSelfy_userFavorites where [ClothesId] in ({0})',
+            lib.$u.array.join(ids, ',', "'", "'"),
+        );
 
-        sql = lib.str.format(sql, lib.$u.array.join(ids, ',', "'", "'"));
-
-        this._db.exec(sql, lib.$func.proxy(callback, this));
+        this._db.exec(sql);
     },
     //end favorites
     //
 
     //
     //begin history
-    addHistory: function (ids, callback) {
+    addHistory(ids) {
         ids = ids instanceof Array ? ids : [ids];
         if (ids.length == 0) return;
 
-        var sql = 'insert into EMSelfy_userHistory(Id,ClothesId,CreateTime) values ';
-
-        sql += lib.$u.array
-            .select(ids, function (item) {
-                return lib.str.format(
+        const values = lib.$u.array
+            .select(ids, (item) =>
+                lib.str.format(
                     "('{0}','{1}','{2}')",
                     lib.guid(),
                     item,
                     lib.str.timeFormat(new Date(), 'yyyy-MM-dd HH:mm:ss'),
-                );
-            })
+                ),
+            )
             .join(',');
 
-        this._db.exec(sql, lib.$func.proxy(callback, this));
+        this._db.exec('insert into EMSelfy_userHistory(Id,ClothesId,CreateTime) values ' + values);
     },
     //注意:这里第一个参数试试传入id字段而不是clothesid!!
-    delHistory: function (hids, callback) {
-        ids = ids instanceof Array ? ids : [ids];
+    delHistory(hids) {
+        const ids = hids instanceof Array ? hids : [hids];
         if (ids.length == 0) return;
 
-        var sql = 'delete from EMSelfy_userHistory where [id] in ({0})';
+        const sql = lib.str.format(
+            'delete from EMSelfy_userHistory where [id] in ({0})',
+            lib.$u.array.join(ids, ',', "'", "'"),
+        );
 
-        sql = lib.str.format(sql, lib.$u.array.join(ids, ',', "'", "'"));
-
-        this._db.exec(sql, lib.$func.proxy(callback, this));
+        this._db.exec(sql);
     },
-    clearHistory: function (callback) {
-        this._db.exec('delete from EMSelfy_userHistory', lib.$func.proxy(callback, this));
+    clearHistory() {
+        this._db.exec('delete from EMSelfy_userHistory');
     },
     //end history
     //
 };
 
-exports.create = function (str, auto) {
-    var o = new _obj(str);
-    auto == true && o.serialize();
-    return o;
+exports.create = function (str) {
+    return new Selfy(str);
 };

@@ -1,4 +1,4 @@
-﻿const utils = {
+const utils = {
     htmlencode(str) {
         if (!str) return '';
         return String(str)

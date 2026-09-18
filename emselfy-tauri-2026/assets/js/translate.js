@@ -1,16 +1,27 @@
-(function () {
-    var DICT = window.EMSELFY_TRANSLATIONS || {};
+(() => {
+    const DICT = window.EMSELFY_TRANSLATIONS || {};
+    const sortedKeys = Object.keys(DICT).sort((a, b) => b.length - a.length);
 
-    var sortedKeys = Object.keys(DICT).sort(function (a, b) {
-        return b.length - a.length;
-    });
+    const CJK_PATTERN = /[\u4e00-\u9fff]/;
+    const SKIP_TAGS = new Set([
+        'SCRIPT',
+        'STYLE',
+        'CANVAS',
+        'EMBED',
+        'OBJECT',
+        'IFRAME',
+        'VIDEO',
+        'AUDIO',
+        'SVG',
+        'RUFFLE-PLAYER',
+    ]);
+    const ATTRS_TO_TRANSLATE = ['placeholder', 'title', 'alt', 'aria-label'];
 
     function translateString(str) {
         if (!str) return str;
-        var result = str;
-        for (var i = 0; i < sortedKeys.length; i++) {
-            var key = sortedKeys[i];
-            if (result.indexOf(key) !== -1) {
+        let result = str;
+        for (const key of sortedKeys) {
+            if (result.includes(key)) {
                 result = result.split(key).join(DICT[key]);
             }
         }
@@ -18,28 +29,12 @@
     }
 
     function containsCJK(str) {
-        return /[\u4e00-\u9fff]/.test(str);
+        return CJK_PATTERN.test(str);
     }
 
-    var SKIP_TAGS = {
-        SCRIPT: true,
-        STYLE: true,
-        CANVAS: true,
-        EMBED: true,
-        OBJECT: true,
-        IFRAME: true,
-        VIDEO: true,
-        AUDIO: true,
-        SVG: true,
-        'RUFFLE-PLAYER': true,
-    };
-
-    var ATTRS_TO_TRANSLATE = ['placeholder', 'title', 'alt', 'aria-label'];
-
     function translateElementAttributes(el) {
-        for (var i = 0; i < ATTRS_TO_TRANSLATE.length; i++) {
-            var attr = ATTRS_TO_TRANSLATE[i];
-            var val = el.getAttribute && el.getAttribute(attr);
+        for (const attr of ATTRS_TO_TRANSLATE) {
+            const val = el.getAttribute?.(attr);
             if (val && containsCJK(val)) {
                 el.setAttribute(attr, translateString(val));
             }
@@ -61,15 +56,11 @@
             return;
         }
         if (root.nodeType === Node.ELEMENT_NODE) {
-            if (SKIP_TAGS[root.tagName]) {
-                return;
-            }
+            if (SKIP_TAGS.has(root.tagName)) return;
             translateElementAttributes(root);
         }
-        var child = root.firstChild;
-        while (child) {
+        for (let child = root.firstChild; child; child = child.nextSibling) {
             walk(child);
-            child = child.nextSibling;
         }
     }
 

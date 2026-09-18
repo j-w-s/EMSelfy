@@ -1,29 +1,29 @@
 //using system
-var fs = require('fs'),
-    http = require('http');
+const fs = require('fs');
+const http = require('http');
 
 //using me
-var str = require('./utils/stringUtils.js');
+const str = require('./utils/stringUtils.js');
 
-var core = {
+const core = {
     server: require('./core/server.js'),
 };
 
 //config
-var config = require('./utils/configUtils.js').getConfig();
+const config = require('./utils/configUtils.js').getConfig();
 
-var welcomeStr = fs.readFileSync(__dirname + '/config/welcome.txt', 'utf8').toString();
+const welcomeStr = fs.readFileSync(__dirname + '/config/welcome.txt', 'utf8');
 
 console.log('EmCodes.club charitable project!');
 console.log(str.format(welcomeStr, config['version'], config['publication']));
 
-var server = http.createServer(core.server.server);
+const server = http.createServer(core.server.server);
 
-var prot = config.listen.min;
-var isinit = false;
+let prot = config.listen.min;
+let isinit = false;
 
-var listen = function () {
-    server.listen(prot, 'localhost', undefined, function () {
+const listen = function () {
+    server.listen(prot, 'localhost', undefined, () => {
         if (isinit) return;
         isinit = true;
         core.server.init(prot);
@@ -31,7 +31,7 @@ var listen = function () {
     });
 };
 
-server.on('error', function (e) {
+server.on('error', (e) => {
     prot++;
     if (prot < config.listen.max) {
         listen();

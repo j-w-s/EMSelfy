@@ -1,42 +1,18 @@
 const lib = {
     qs: {
         stringify(obj) {
-            const parts = [];
-            for (const key in obj) {
-                if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
-                const value = obj[key];
-                if (Array.isArray(value)) {
-                    for (const v of value) {
-                        parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(v)}`);
-                    }
-                } else {
-                    parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+            const params = new URLSearchParams();
+            for (const [key, value] of Object.entries(obj)) {
+                for (const v of Array.isArray(value) ? value : [value]) {
+                    params.append(key, v);
                 }
             }
-            return parts.join('&');
+            return params.toString();
         },
         parse(str) {
             const obj = {};
-            str = String(str ?? '');
-            if (str.startsWith('?')) str = str.slice(1);
-            if (str.length === 0) return obj;
-
-            for (const pair of str.split('&')) {
-                if (pair.length === 0) continue;
-                const idx = pair.indexOf('=');
-                let key, value;
-                if (idx === -1) {
-                    key = decodeURIComponent(pair);
-                    value = '';
-                } else {
-                    key = decodeURIComponent(pair.slice(0, idx));
-                    value = decodeURIComponent(pair.slice(idx + 1).replace(/\+/g, ' '));
-                }
-                if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                    obj[key] = Array.isArray(obj[key]) ? [...obj[key], value] : [obj[key], value];
-                } else {
-                    obj[key] = value;
-                }
+            for (const [key, value] of new URLSearchParams(str ?? '')) {
+                obj[key] = Object.hasOwn(obj, key) ? [].concat(obj[key], value) : value;
             }
             return obj;
         },
@@ -180,8 +156,6 @@ $(window).on('init', function () {
     })();
 
     (function initSearch() {
-        const LOCAL_KEY_LOADTYPE = 'loadtype';
-
         const $searchKey = $('.s-input input');
         const $searchBox = $searchKey.parents('.s-b-key:eq(0)');
         const $moreToggle = $('.s-b-key .s-ico');
