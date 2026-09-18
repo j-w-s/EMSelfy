@@ -65,7 +65,7 @@ $u.array = {
 
 $u.sql = {
     // Renders the named query template, then pulls out its $param / @param
-    // placeholders into a bound-params object ($ = exact match, @ = LIKE wrap).
+    // placeholders into a bound-params object
     loadSql(sql, query) {
         const xml = lib.config.getSql(sql);
         const rendered = lib.htmldecode(lib.template.render(xml._, { query, config: xml.$ }));

@@ -38,8 +38,6 @@ function Selfy(a) {
 }
 
 Selfy.prototype = {
-    // No-op: bun:sqlite opens synchronously, kept only so existing call
-    // sites (create(str, true)) don't need to change.
     serialize() {},
     close() {
         this._db.close();
@@ -60,11 +58,7 @@ Selfy.prototype = {
         return this._db.query(sql).all();
     },
     getList(query) {
-        const {
-            sql: sql1,
-            params: params1,
-            config: queryConfig,
-        } = lib.$u.sql.loadSql('queryList', query);
+        const { sql: sql1, params: params1, config: queryConfig } = lib.$u.sql.loadSql('queryList', query);
         const { sql: sql2, params: params2 } = lib.$u.sql.loadSql('queryList.count', query);
 
         const rows = this._db.query(sql1).all(params1);

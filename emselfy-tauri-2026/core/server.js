@@ -206,7 +206,6 @@ function getList(url, query, request, response) {
     }
 }
 
-// Runs a synchronous db action and writes the standard success/error JSON shape.
 function respondToAction(resp, action) {
     try {
         action();
